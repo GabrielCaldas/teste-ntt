@@ -1,0 +1,105 @@
+<nav class="navbar navbar-light bg-light navbar-overflow">
+  <div class="container">
+
+    <button class="btn btn-outline" (click)="goToHome()">
+      <img src={{appIcon}}  width="30" height="24">
+      {{title}}
+    </button>
+    
+    <button type="button" class="btn btn-danger" (click)="openFavoriteList()" title="Meus Favoritos">
+      <i class='bi bi-heart text-light'></i>
+    </button>
+  </div>
+</nav>
+
+<div class="body-div">
+  <div *ngIf="state==homeState || state==searchState" class="content-div">
+    <div class="row">
+      <div class="col-2">
+
+        <img class="mb-3 mt-5" src={{appIcon}}  width="100%" >
+      </div>
+      <div class="col-10" style="display: flex; flex-direction: column-reverse; vertical-align: middle;">
+
+        <h5>Busque os melhores filmes!</h5>
+        <h3>{{title}}</h3>
+      </div>
+    </div>
+    <div class="d-flex">
+      <input class="form-control me-2"  placeholder="ex. Velozes e furiosos" [(ngModel)]="searchTerm">
+      <button class="btn btn-primary"  (click)="searchMovie()">Buscar</button>
+    </div>
+    <div *ngIf="state==searchState">
+      <hr>
+      <div *ngIf="!selectedMovie">
+        <h5>Nenhum filme encontrado com sua busca</h5>
+        <h1>:(</h1>
+      </div>
+      <div *ngIf="selectedMovie">
+        <movie-item
+          [movieItem]="selectedMovie"
+          [isOnFavorite]="isOnFavorite(selectedMovie.imdbID)"
+          (seeMore)="detailMovie($event)"
+          (changeFavoriteState)="changeFavoriteState($event)"
+        >
+        </movie-item>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="state==favoriteState"  class="content-div">
+    <div class="row content-div">
+
+      <button class="btn btn-outline-primary col" style="max-width: 80px;" (click)="goToHome()">Voltar</button>
+      <h3 class="col">Meus favoritos</h3>
+    </div>
+    <hr>
+    <div *ngFor="let movie of movieList">
+      <movie-item
+        [movieItem]="movie"
+        [isOnFavorite]="isOnFavorite(movie.imdbID)"
+        (seeMore)="detailMovie($event)"
+        (changeFavoriteState)="changeFavoriteState($event)"
+      >
+      </movie-item>
+    </div>
+    <div *ngIf="!movieList || movieList.length==0">
+      <h5>Nenhum filme na sua lista de favoritos</h5>
+      <h1>:(</h1>
+    </div>
+  </div>
+
+  <div *ngIf="state==detailMovieState" class="content-div">
+    <div class="container ">
+      <div class="row">
+        <div class="col-lg-4 col-sm-12 mb-3">
+          <img src="{{selectedMovie.Poster}}" class="poster">
+        </div>
+        <div class="col-lg-6 col-sm-12">
+          <h2>{{selectedMovie["Title"]}} - {{selectedMovie["Year"]}}</h2>
+          <p *ngIf="selectedMovie.Genre!='N/A'">{{selectedMovie["Genre"]}}</p>
+          <div class="row">
+            <div class="col-7"><i class="bi bi-star-fill"></i>{{selectedMovie["imdbRating"]}}</div>
+            <div class="col-5">
+              <button type="button" class="btn btn-danger" (click)="changeFavoriteState(selectedMovie.imdbID)">
+                <i *ngIf="!isOnFavorite(selectedMovie.imdbID)" class='bi bi-heart text-light'></i>
+                <i *ngIf="isOnFavorite(selectedMovie.imdbID)" class='bi bi-heart-fill text-light'></i>
+                {{isOnFavorite(selectedMovie.imdbID)?'Remover':'Favoritar'}}
+              </button>
+            </div>
+          </div>
+          <p *ngIf="selectedMovie.Director!='N/A'">Dirigido por {{selectedMovie["Director"]}}</p>
+          <p *ngIf="selectedMovie.Actors!='N/A'">Atuação de {{selectedMovie["Actors"]}}</p>
+        </div>
+      </div>
+
+      <div class="row">
+        {{selectedMovie["Plot"]}}
+      </div>
+      <button class="btn btn-outline-primary" (click)="goToHome()">Voltar</button>
+    </div>
+  </div>
+
+</div>
+
+

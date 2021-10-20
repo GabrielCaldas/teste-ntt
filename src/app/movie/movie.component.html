@@ -1,0 +1,20 @@
+<div class="card" style="width: 100%">
+    <img src="{{movieItem.Poster}}" class="card-img-top movie-image">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+
+                <p class="card-text">{{movieItem["Title"]}}</p>
+            </div>
+            <div class="col-6" style="justify-content: end; display: flex;">
+                <button *ngIf="isOnFavorite" class="btn btn-danger" (click)="changeFavoriteStateClick()" title="Remover dos favoritos" >
+                    <i  class="bi bi-heart-fill text-light red"></i>
+                </button>
+                <button *ngIf="!isOnFavorite" class="btn btn-danger" (click)="changeFavoriteStateClick()" title="Adicionar aos favoritos" >
+                    <i class="bi bi-heart text-light red"></i>
+                </button>
+            </div>
+        </div>
+        <button class="btn btn-primary" (click)="seeMoreClick()">Ver mais</button>
+    </div>
+</div>
